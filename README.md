@@ -26,8 +26,8 @@ Train and test data to come soon.
 If you find our work useful in your research, please consider citing:
 ```
 @article{dai2019sgnn,
+ title={SG-NN: Sparse Generative Neural Networks for Self-Supervised Scene Completion of RGB-D Scans},
  author = {Dai, Angela and Diller, Christian and Nie{\ss}ner, Matthias},
- booktitle = {Proceedings of the European Conference on Computer Vision ({ECCV})},
  journal = {arXiv preprint arXiv:1912.00036},
  year = {2019}
 }
