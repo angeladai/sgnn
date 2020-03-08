@@ -1,0 +1,44 @@
+
+s_sceneFileList = "../fileLists/mp-rooms_trainval.txt";
+
+
+// includes sens files to integrate
+s_scanPath = "./data/Matterport/v1/scans";
+s_scanMeshPath = "./data/Matterport/v1/scans";
+
+s_incompleteFramePath = "./output/frames/matterport";
+s_outputCompletePath = "./output/mp_sdf_vox_2cm_scanned"
+s_outputIncompletePath = "./output/mp_sdf_vox_2cm_incomplete"
+
+s_maxNumScenes = 0; // 0 for no max
+s_maxNumSens = 3;
+
+s_renderWidth = 320;	// render width
+s_renderHeight = 240;	// render height
+s_BRDF = 0;				// 0-phong; 1-ward
+s_cameraFov = 60.0f; 	// degrees
+
+s_minDepth = 0.4f;
+s_maxDepth = 6.0f;
+
+//noise model for depth -- TODO implement
+s_addNoiseToDepth = false;
+s_depthNoiseSigma = 0.01f;
+
+s_filterDepthMap = true; 	//bilateral filter depth map
+s_depthSigmaD = 5.0f;		//bilateral filter sigma domain
+s_depthSigmaR = 0.1f;		//bilateral filter sigma range
+
+//fusion parameters
+s_voxelSize = 0.02f;	//in m //32voxels per 1.5m
+s_renderNear = 0.1f;		//in m
+s_renderFar = 10.0f;		//in m
+s_scenePadding = 6; 		//on each side
+s_heightPad = 3;
+s_bSaveSparse = true;
+s_bDebugVis = false;
+s_bUseRenderedDepth = false;
+s_chanceDropFrames = 0.65f;
+
+s_bGenerateSdfs = true;
+s_bGenerateKnown = true;

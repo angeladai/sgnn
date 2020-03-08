@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{8e0e7543-8329-42d8-a2e5-c872d029edc0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="shaders\drawAnnotations.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="zParametersScan.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Fuser.h" />
+    <ClInclude Include="src\GlobalAppState.h" />
+    <ClInclude Include="src\Lighting.h" />
+    <ClInclude Include="src\MarchingCubes.h" />
+    <ClInclude Include="src\mLibInclude.h" />
+    <ClInclude Include="src\Scene.h" />
+    <ClInclude Include="src\SimpleMaterial.h" />
+    <ClInclude Include="src\stdafx.h" />
+    <ClInclude Include="src\Tables.h" />
+    <ClInclude Include="src\targetver.h" />
+    <ClInclude Include="src\Visualizer.h" />
+    <ClInclude Include="src\VoxelGrid.h" />
+    <ClInclude Include="src\json.h" />
+    <ClInclude Include="src\ScansDirectory.h" />
+    <ClInclude Include="src\CameraUtil.h" />
+    <ClInclude Include="src\Aggregation.h" />
+    <ClInclude Include="src\Segmentation.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\VoxelGrid.cpp" />
+    <ClCompile Include="src\Fuser.cpp" />
+    <ClCompile Include="src\Lighting.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\MarchingCubes.cpp" />
+    <ClCompile Include="src\mLibSource.cpp" />
+    <ClCompile Include="src\Scene.cpp" />
+    <ClCompile Include="src\SimpleMaterial.cpp" />
+    <ClCompile Include="src\stdafx.cpp" />
+    <ClCompile Include="src\Visualizer.cpp" />
+    <ClCompile Include="src\json.cpp" />
+    <ClCompile Include="src\Aggregation.cpp" />
+    <ClCompile Include="src\Segmentation.cpp" />
+  </ItemGroup>
+</Project>
