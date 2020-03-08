@@ -144,15 +144,6 @@ def load_scene_known(file):
     return known
 
 
-def load_points(file):
-    assert os.path.isfile(file)
-    with open(file, 'rb') as f:
-        plydata = plyfile.PlyData.read(f)
-        points = [plydata['vertex']['x'], plydata['vertex']['y'], plydata['vertex']['z']]
-        points = np.stack(points)
-    return points
-
-
 def preprocess_sdf_np(sdf, truncation):
     sdf[sdf < -truncation] = -truncation
     sdf[sdf > truncation] = truncation
@@ -256,15 +247,16 @@ def make_scale_transform(scale):
     return transform
 
 
-def save_predictions(output_path, names, inputs, target_for_sdf, target_for_occs, output_sdf, output_occs, world2grids, visualize_dfs, truncation, thresh=1):
+def save_predictions(output_path, names, inputs, target_for_sdf, target_for_occs, output_sdf, output_occs, world2grids, truncation, thresh=1):
     if not os.path.isdir(output_path):
         os.makedirs(output_path)
-    num_hierarchy_levels = len(output_occs)
-    factors = [1] * num_hierarchy_levels
-    for h in range(num_hierarchy_levels-2, -1, -1):
-        factors[h] = factors[h+1] * 2
-    dims = np.max(output_sdf[0][0],0)+1 if target_for_sdf is None else target_for_sdf.shape[2:]
-    isovalue = 1 if visualize_dfs else 0
+    if output_occs is not None:
+        num_hierarchy_levels = len(output_occs)
+        factors = [1] * num_hierarchy_levels
+        for h in range(num_hierarchy_levels-2, -1, -1):
+            factors[h] = factors[h+1] * 2
+    dims = np.maximum(np.max(output_sdf[0][0],0), np.max(inputs[0],0))+1 if target_for_sdf is None else target_for_sdf.shape[2:]
+    isovalue = 0
     trunc = truncation - 0.1
     ext = '.ply'
 
@@ -273,35 +265,22 @@ def save_predictions(output_path, names, inputs, target_for_sdf, target_for_occs
         mask = inputs[0][:,-1] == k
         locs = inputs[0][mask]
         feats = inputs[1][mask]
+        
         input = sparse_to_dense_np(locs[:,:-1], feats, dims[2], dims[1], dims[0], -float('inf'))
-        if visualize_dfs:
-            input = np.abs(input)
         mc.marching_cubes(torch.from_numpy(input), None, isovalue=isovalue, truncation=trunc, thresh=10, output_filename=os.path.join(output_path, name + 'input-mesh' + ext))
-        for h in range(num_hierarchy_levels):
-            transform = make_scale_transform(factors[h])
-            if target_for_occs is not None:
-                visualize_occ_as_points(target_for_occs[h][k,0] == 1, 0.5, os.path.join(output_path, name + 'target-' + str(h) + ext), transform, thresh_max=1.5)
-            if output_occs[h][k] is not None:
-                visualize_sparse_locs_as_points(output_occs[h][k], os.path.join(output_path, name + 'pred-' + str(h) + ext), transform)
+        if output_occs is not None:
+            for h in range(num_hierarchy_levels):
+                transform = make_scale_transform(factors[h])
+                if target_for_occs is not None:
+                    visualize_occ_as_points(target_for_occs[h][k,0] == 1, 0.5, os.path.join(output_path, name + 'target-' + str(h) + ext), transform, thresh_max=1.5)
+                if output_occs is not None and output_occs[h][k] is not None:
+                    visualize_sparse_locs_as_points(output_occs[h][k], os.path.join(output_path, name + 'pred-' + str(h) + ext), transform)
         if output_sdf[k] is not None:
             locs = output_sdf[k][0][:,:3]
             pred_sdf_dense = sparse_to_dense_np(locs, output_sdf[k][1][:,np.newaxis], dims[2], dims[1], dims[0], -float('inf'))
-            if visualize_dfs:
-                pred_sdf_dense = np.abs(pred_sdf_dense)
             mc.marching_cubes(torch.from_numpy(pred_sdf_dense), None, isovalue=isovalue, truncation=trunc, thresh=10, output_filename=os.path.join(output_path, name + 'pred-mesh' + ext))
         if target_for_sdf is not None:
-            target = target_for_sdf[k,0] if not visualize_dfs else np.abs(target_for_sdf[k,0])
+            target = target_for_sdf[k,0]
             mc.marching_cubes(torch.from_numpy(target), None, isovalue=isovalue, truncation=trunc, thresh=10, output_filename=os.path.join(output_path, name + 'target-mesh' + ext))
-
-
-def save_predictions_to_file(output_locs, output_sdf, output_file):
-    num = output_locs.shape[0]
-    num_data = [num]
-    output_locs_data = output_locs.astype(np.uint32).flatten()
-    output_sdf_data = output_sdf.astype(np.float32).flatten()
-    with open(output_file, 'wb') as fout:
-        fout.write(struct.pack('Q', *num_data))
-        fout.write(struct.pack('I'*3*num, *output_locs_data))
-        fout.write(struct.pack('f'*num, *output_sdf_data))
 
 

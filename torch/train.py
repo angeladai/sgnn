@@ -35,7 +35,6 @@ parser.add_argument('--no_pass_occ', dest='no_pass_occ', action='store_true')
 parser.add_argument('--no_pass_feats', dest='no_pass_feats', action='store_true')
 parser.add_argument('--use_skip_sparse', type=int, default=1, help='use skip connections between sparse convs')
 parser.add_argument('--use_skip_dense', type=int, default=1, help='use skip connections between dense convs')
-parser.add_argument('--logweight_target_sdf', dest='logweight_target_sdf', action='store_true')
 parser.add_argument('--no_logweight_target_sdf', dest='logweight_target_sdf', action='store_false')
 # train params
 parser.add_argument('--num_hierarchy_levels', type=int, default=4, help='#hierarchy levels (must be > 1).')
@@ -62,7 +61,7 @@ assert( args.weight_missing_geo >= 1)
 assert( args.num_hierarchy_levels > 1 )
 if args.input_dim == 0: # set default values
     args.input_dim = 2 ** (3+args.num_hierarchy_levels)
-    #TODO ANGIE FIX THIS PART
+    #TODO FIX THIS PART
     if '64-64-128' in args.data_path:
         args.input_dim = (128, 64, 64)
     elif '96-96-160' in args.data_path:

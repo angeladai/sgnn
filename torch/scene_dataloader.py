@@ -20,9 +20,11 @@ def collate(batch):
     if batch[0]['known'] is not None:
         known = torch.stack([x['known'] for x in batch])
     colors = None
-    hierarchy = [None]*len(batch[0]['hierarchy'])
-    for h in range(len(batch[0]['hierarchy'])):
-        hierarchy[h] = torch.stack([x['hierarchy'][h] for x in batch])
+    hierarchy = None
+    if batch[0]['hierarchy'] is not None:
+        hierarchy = [None]*len(batch[0]['hierarchy'])
+        for h in range(len(batch[0]['hierarchy'])):
+            hierarchy[h] = torch.stack([x['hierarchy'][h] for x in batch])
     for b in range(1, len(batch)):
         cur_locs = batch[b]['input'][0]
         cur_locs = torch.cat([cur_locs, torch.ones(cur_locs.shape[0], 1).long()*b], 1)
@@ -70,25 +72,25 @@ class SceneDataset(torch.utils.data.Dataset):
             inputs, dims, world2grid = data_util.load_scene(input_file)
             targets, dims, world2grid = data_util.load_scene(target_file)
             target_known = data_util.load_scene_known(os.path.splitext(target_file)[0] + '.knw')
-            targets = data_util.sparse_to_dense_np(targets[0], targets[1], dims[2], dims[1], dims[0], -float('inf'))
+            targets = data_util.sparse_to_dense_np(targets[0], targets[1][:,np.newaxis], dims[2], dims[1], dims[0], -float('inf'))
             target_hierarchy = None
         
         orig_dims = torch.LongTensor(targets.shape)
         if not self.is_chunks: 
             # add padding
             hierarchy_factor = pow(2, self.num_hierarchy_levels-1)
-            max_input_dim = np.array(sdf.shape)
+            max_input_dim = np.array(targets.shape)
             if self.max_input_height > 0 and max_input_dim[self.UP_AXIS] > self.max_input_height:
                 max_input_dim[self.UP_AXIS] = self.max_input_height
-                mask_input = input[0][:,self.UP_AXIS] < self.max_input_height
-                input[0] = input[0][mask_input]
-                input[1] = input[1][mask_input]
+                mask_input = inputs[0][:,self.UP_AXIS] < self.max_input_height
+                inputs[0] = inputs[0][mask_input]
+                inputs[1] = inputs[1][mask_input]
             max_input_dim = ((max_input_dim + (hierarchy_factor*4) - 1) // (hierarchy_factor*4)) * (hierarchy_factor*4)
             # pad target to max_input_dim
             padded = np.zeros((max_input_dim[0], max_input_dim[1], max_input_dim[2]), dtype=np.float32)
             padded.fill(-float('inf'))
-            padded[:min(self.max_input_height, sdf.shape[0]), :sdf.shape[1], :sdf.shape[2]] = sdf[:self.max_input_height, :, :]
-            sdf = padded
+            padded[:min(self.max_input_height, targets.shape[0]), :targets.shape[1], :targets.shape[2]] = targets[:self.max_input_height, :, :]
+            targets = padded
             if target_known is not None:
                 known_pad = np.ones((max_input_dim[0], max_input_dim[1], max_input_dim[2]), dtype=np.uint8) * 255
                 known_pad[:min(self.max_input_height,target_known.shape[0]), :target_known.shape[1], :target_known.shape[2]] = target_known[:self.max_input_height, :, :]
