@@ -19,7 +19,7 @@ For visualization, please install the marching cubes by `python setup.py install
 
 ### Testing
 * See `python test_scene.py --help` for all test options. 
-* Example command: `python test_scene.py --gpu 0 --input_data_path ./data/mp_sdf_vox_2cm_input --target_data_path ./data/mp_sdf_vox_2cm_target --test_file_list ../filelists/mp-rooms_val-scenes.txt --model_path logs/mp/model-epoch-4.pth --output ./output  --max_to_vis 20`
+* Example command: `python test_scene.py --gpu 0 --input_data_path ./data/mp_sdf_vox_2cm_input --target_data_path ./data/mp_sdf_vox_2cm_target --test_file_list ../filelists/mp-rooms_val-scenes.txt --model_path sgnn.pth --output ./output  --max_to_vis 20`
 
 ### Data:
 * Scene data: 
