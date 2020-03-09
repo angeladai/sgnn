@@ -8,15 +8,18 @@ SG-NN: Sparse Generative Neural Networks for Self-Supervised Scene Completion of
 
 ## Code
 ### Installation:  
-Training is implemented with [PyTorch](https://pytorch.org/). This code was developed under PyTorch 1.1.0.
+Training is implemented with [PyTorch](https://pytorch.org/). This code was developed under PyTorch 1.1.0, Python 2.7, and uses [SparseConvNet](https://github.com/facebookresearch/SparseConvNet).
+
+For visualization, please install the marching cubes by `python setup.py install` in `marching_cubes`.
 
 ### Training:  
 * See `python train.py --help` for all train options. 
+* Example command: `python train.py --gpu 0 --data_path ./data/completion_blocks --train_file_list ../filelists/train_list.txt --val_file_list ../filelists/val_list.txt --save_epoch 1 --save logs/mp --max_epoch 4`
 * Trained models: Coming soon!
 
 ### Testing
 * See `python test_scene.py --help` for all test options. 
-
+* Example command: `python test_scene.py --gpu 0 --input_data_path ./data/mp_sdf_vox_2cm_input --target_data_path ./data/mp_sdf_vox_2cm_target --test_file_list ../filelists/mp-rooms_val-scenes.txt --model_path logs/mp/model-epoch-4.pth --output ./output  --max_to_vis 20`
 
 ### Data:
 Train and test data to come soon.
