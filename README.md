@@ -27,6 +27,7 @@ For visualization, please install the marching cubes by `python setup.py install
   - [mp_sdf_vox_2cm_target.zip](http://kaldir.vc.in.tum.de/adai/SGNN/mp_sdf_vox_2cm_target.zip) (58G)
 * Train data:
   - [completion_blocks.zip](http://kaldir.vc.in.tum.de/adai/SGNN/completion_blocks.zip) (88G)
+* [GenerateScans](datagen/GenerateScans) depends on the [mLib](https://github.com/niessner/mLib) library.
 
 ## Citation:  
 If you find our work useful in your research, please consider citing:
