@@ -60,7 +60,8 @@ assert( not (args.no_pass_feats and args.no_pass_occ) )
 assert( args.weight_missing_geo >= 1)
 assert( args.num_hierarchy_levels > 1 )
 if args.input_dim == 0: # set default values
-    args.input_dim = 2 ** (3+args.num_hierarchy_levels)
+    #args.input_dim = 2 ** (3+args.num_hierarchy_levels)
+    args.input_dim = (128, 64, 64)
     #TODO FIX THIS PART
     if '64-64-128' in args.data_path:
         args.input_dim = (128, 64, 64)
